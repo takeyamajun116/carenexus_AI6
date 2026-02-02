@@ -13,33 +13,28 @@
         .blur-in { animation: blurIn 0.5s ease-out forwards; }
         @keyframes blurIn { from { filter: blur(5px); opacity: 0; } to { filter: blur(0); opacity: 1; } }
         
-        /* Document Styles (Paper feel) */
+        /* Document Styles (Real Government Paper feel) */
         .doc-paper {
-            font-family: 'Noto Serif JP', serif; /* 明朝体で行政書類感を演出 */
+            font-family: 'Noto Serif JP', serif; /* 明朝体 */
             background-color: white;
-            color: #111;
-            font-size: 10px;
-            line-height: 1.4;
+            color: #000;
             position: relative;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
-        .doc-table { width: 100%; border-collapse: collapse; border: 1px solid #000; }
-        .doc-table th, .doc-table td { border: 1px solid #000; padding: 4px; }
-        .doc-header { text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 10px; text-decoration: underline; }
         
         /* Watermark */
         .watermark { 
             position: absolute; 
-            top: 50%; 
+            top: 40%; 
             left: 50%; 
             transform: translate(-50%, -50%) rotate(-30deg); 
-            font-size: 4rem; 
-            color: rgba(255, 0, 0, 0.15); 
+            font-size: 5rem; 
+            color: rgba(255, 0, 0, 0.1); 
             font-weight: bold; 
             pointer-events: none; 
             white-space: nowrap;
-            border: 4px solid rgba(255, 0, 0, 0.15);
-            padding: 10px 40px;
+            border: 6px solid rgba(255, 0, 0, 0.1);
+            padding: 10px 50px;
             z-index: 10;
         }
 
@@ -229,7 +224,31 @@
                                 <button class="bg-white border border-gray-300 text-gray-600 hover:bg-gray-50 px-3 py-1.5 rounded-md text-xs font-bold transition">主治医確認書 DL</button>
                             </td>
                         </tr>
-                        </tbody>
+                        <tr class="hover:bg-blue-50 transition">
+                            <td class="px-6 py-4 font-medium text-gray-900">鈴木 大輔 様<br><span class="text-xs text-gray-400 bg-gray-100 px-1 rounded">ターミナル</span></td>
+                            <td class="px-6 py-4 text-red-600 font-bold"><i class="fa-solid fa-file-invoice-dollar mr-1"></i>ターミナルケア加算</td>
+                            <td class="px-6 py-4 max-w-xs text-xs">死亡日時の入力があるが、加算算定の実績データなし。</td>
+                            <td class="px-6 py-4">
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md text-xs font-bold shadow transition">実績修正へ</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-blue-50 transition">
+                            <td class="px-6 py-4 font-medium text-gray-900">山本 さくら 様<br><span class="text-xs text-gray-400 bg-gray-100 px-1 rounded">退院直後</span></td>
+                            <td class="px-6 py-4 text-gray-800 font-bold"><i class="fa-solid fa-hospital-user mr-1"></i>退院時共同指導</td>
+                            <td class="px-6 py-4 max-w-xs text-xs">カンファレンス参加記録あり。加算算定が可能。</td>
+                            <td class="px-6 py-4">
+                                <button class="bg-white border border-gray-300 text-gray-600 hover:bg-gray-50 px-3 py-1.5 rounded-md text-xs font-bold transition">指導記録作成</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-blue-50 transition">
+                            <td class="px-6 py-4 font-medium text-gray-900">高橋 誠 様<br><span class="text-xs text-gray-400 bg-gray-100 px-1 rounded">要介護2</span></td>
+                            <td class="px-6 py-4 text-orange-600 font-bold"><i class="fa-solid fa-clock mr-1"></i>初回加算 期限切れ</td>
+                            <td class="px-6 py-4 max-w-xs text-xs">初回訪問から2ヶ月経過。算定は不可だが記録修正が必要。</td>
+                            <td class="px-6 py-4">
+                                <button class="text-gray-400 text-xs underline">無視する</button>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -262,7 +281,28 @@
                             <button class="text-xs text-gray-400 hover:text-gray-600"><i class="fa-solid fa-check"></i> 完了にする</button>
                         </div>
                     </div>
+                    <div class="bg-white border border-l-4 border-gray-200 border-l-red-500 p-4 rounded-lg shadow-sm hover:shadow-md cursor-pointer transition">
+                         <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-gray-800 text-sm">ターミナルケア加算の実績修正</h4>
+                                <p class="text-xs text-gray-500 mt-1"><i class="fa-solid fa-user mr-1"></i>鈴木 大輔 様</p>
+                            </div>
+                            <span class="bg-red-100 text-red-600 text-[10px] font-bold px-2 py-1 rounded-full">¥25,000</span>
+                        </div>
+                        <div class="mt-3 flex gap-2">
+                            <button class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded font-bold hover:bg-gray-200">レセコンを開く</button>
+                        </div>
                     </div>
+                    <div class="bg-white border border-l-4 border-gray-200 border-l-orange-400 p-4 rounded-lg shadow-sm hover:shadow-md cursor-pointer transition">
+                         <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-gray-800 text-sm">緊急時訪問看護加算の同意書確認</h4>
+                                <p class="text-xs text-gray-500 mt-1"><i class="fa-solid fa-user mr-1"></i>伊藤 茂 様 他4名</p>
+                            </div>
+                            <span class="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-1 rounded-full">Risk回避</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="hidden md:block w-1/2 bg-gray-50 p-6 flex flex-col justify-center items-center text-center">
                     <div class="bg-white p-4 rounded-full shadow-sm mb-4">
                         <i class="fa-solid fa-lightbulb text-yellow-400 text-3xl"></i>
@@ -383,67 +423,90 @@
             }, 800);
         }
 
-        // --- Mock Document Generator ---
+        // --- Mock Document Generator (Real Government Style) ---
         function generateMockDoc(userName, type) {
             const today = new Date();
-            const dateStr = `令和${today.getFullYear() - 2018}年${today.getMonth() + 1}月${today.getDate()}日`;
+            const year = today.getFullYear() - 2018; 
+            const dateStr = `令和 ${year} 年 ${today.getMonth() + 1} 月 ${today.getDate()} 日`;
             
             return `
-                <div class="watermark">DRAFT</div>
-                <div class="doc-header">介護給付費算定に係る体制等に関する届出書</div>
-                <div class="text-right mb-2">${dateStr}</div>
-                <div class="mb-4">東京都知事 殿</div>
-                
-                <div class="mb-4">
-                    <div class="flex">
-                        <div class="border border-black p-1 w-24">所在地</div>
-                        <div class="border border-black p-1 flex-1">東京都八王子市〇〇町1-1</div>
+                <div style="font-family: 'Noto Serif JP', serif; color: #000; line-height: 1.2;">
+                    <div class="watermark" style="border-color: rgba(255,0,0,0.1); color: rgba(255,0,0,0.1);">DRAFT</div>
+
+                    <div class="text-[9px] mb-1">（別紙２）</div>
+                    <div class="text-center font-bold text-base underline mb-4">介護給付費算定に係る体制等に関する届出書</div>
+                    
+                    <div class="flex justify-between items-end mb-4 text-[10px]">
+                        <div>${dateStr}</div>
+                        <div class="text-right">東京都知事 殿</div>
                     </div>
-                    <div class="flex">
-                        <div class="border border-black p-1 w-24">申請者名</div>
-                        <div class="border border-black p-1 flex-1">
-                            CareNexus訪問看護ステーション<br>
-                            管理者 代表 太郎 <span class="text-red-500 opacity-50">[印]</span>
+
+                    <div class="border border-black mb-4 text-[10px]">
+                        <div class="flex border-b border-black">
+                            <div class="w-24 bg-gray-100 border-r border-black p-1 flex items-center justify-center">所在地</div>
+                            <div class="flex-1 p-1">東京都八王子市〇〇町１−１</div>
+                        </div>
+                        <div class="flex border-b border-black">
+                            <div class="w-24 bg-gray-100 border-r border-black p-1 flex items-center justify-center">申請者名</div>
+                            <div class="flex-1 p-1">
+                                医療法人社団 CareNexus<br>
+                                代表理事　佐藤 太郎　　<span class="text-red-600 opacity-70 border border-red-600 rounded-full px-1 text-[8px]">印</span>
+                            </div>
+                        </div>
+                        <div class="flex">
+                            <div class="w-24 bg-gray-100 border-r border-black p-1 flex items-center justify-center">事業所名称</div>
+                            <div class="flex-1 p-1">CareNexus訪問看護ステーション</div>
                         </div>
                     </div>
-                </div>
 
-                <div class="mb-2 font-bold">【届出を行う加算等】</div>
-                <table class="doc-table mb-4">
-                    <tr>
-                        <th class="w-1/3 bg-gray-100">加算名称</th>
-                        <th class="bg-gray-100">状況</th>
-                        <th class="bg-gray-100">適用開始月</th>
-                    </tr>
-                    <tr>
-                        <td>特別管理加算</td>
-                        <td>
-                            <div class="flex items-center gap-2">
-                                <span>□ なし</span>
-                                <span class="font-bold">■ あり</span>
-                            </div>
-                        </td>
-                        <td>令和6年2月〜</td>
-                    </tr>
-                </table>
+                    <div class="text-[10px] font-bold mb-1">【異動等の区分】</div>
+                    <div class="border border-black p-2 text-[10px] mb-4">
+                        <span class="mr-4">１．新規指定</span>
+                        <span class="mr-4 font-bold border rounded-full border-black px-2 py-0.5">２．体制等の変更</span>
+                        <span>３．その他</span>
+                    </div>
 
-                <div class="mb-2 font-bold">【算定対象者詳細】</div>
-                <table class="doc-table">
-                     <tr>
-                        <th class="bg-gray-100 w-24">氏名</th>
-                        <td>${userName}</td>
-                    </tr>
-                    <tr>
-                        <th class="bg-gray-100">区分</th>
-                        <td>特別管理加算 (II)</td>
-                    </tr>
-                    <tr>
-                        <th class="bg-gray-100">算定要件</th>
-                        <td>真皮を越える褥瘡の状態（NPUAP分類III度以上）</td>
-                    </tr>
-                </table>
-                <div class="mt-4 text-[8px] text-gray-500 text-center">
-                    ※本書類はCareNexus Auditにより生成されたドラフトです。提出前に必ず内容をご確認ください。
+                    <div class="text-[10px] font-bold mb-1">【体制等状況一覧（変更箇所のみ抜粋）】</div>
+                    <table class="w-full border-collapse border border-black text-[9px]">
+                        <tr class="bg-gray-200 text-center">
+                            <th class="border border-black p-1 w-1/3">項目名</th>
+                            <th class="border border-black p-1">適用有無</th>
+                            <th class="border border-black p-1">状況コード・内容</th>
+                        </tr>
+                        <tr>
+                            <td class="border border-black p-1">特別管理体制</td>
+                            <td class="border border-black p-1 text-center font-bold">あり</td>
+                            <td class="border border-black p-1">
+                                <span class="opacity-30">１．なし</span>　
+                                <span class="font-bold border border-black rounded-full px-1">２．あり</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="border border-black p-1">緊急時訪問看護加算</td>
+                            <td class="border border-black p-1 text-center">あり</td>
+                            <td class="border border-black p-1">
+                                <span class="opacity-30">１．なし</span>　
+                                <span class="font-bold border border-black rounded-full px-1">２．あり</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="border border-black p-1">ターミナルケア体制</td>
+                            <td class="border border-black p-1 text-center">あり</td>
+                            <td class="border border-black p-1">
+                                <span class="opacity-30">１．なし</span>　
+                                <span class="font-bold border border-black rounded-full px-1">２．あり</span>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="mt-4 border-t border-dashed border-gray-400 pt-2">
+                        <div class="text-[8px] font-bold text-gray-600 mb-1">【算定根拠（CareNexus Audit Log）】</div>
+                        <div class="text-[8px] text-gray-500">
+                            対象利用者：${userName} 様<br>
+                            検知理由：レセプトデータの「傷病名コード（褥瘡）」および「処置実績」に基づき、特別管理加算(II)の算定要件を満たすと判定されました。<br>
+                            ※本ドラフトは、東京都福祉保健局の様式（令和6年度改定版）に準拠して生成されています。
+                        </div>
+                    </div>
                 </div>
             `;
         }
@@ -488,7 +551,6 @@
             const toast = document.getElementById('toast');
             toast.classList.remove('translate-y-20', 'opacity-0');
             
-            // Create a fake download link
             const element = document.createElement('a');
             element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent('これはデモファイルです'));
             element.setAttribute('download', currentDocName);
