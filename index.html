@@ -51,11 +51,10 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center gap-8">
-                    <div class="flex items-center gap-2 cursor-pointer" onclick="navigateTo('dashboard')">
-                        <div class="bg-blue-600 text-white p-1.5 rounded-lg">
-                            <i class="fa-solid fa-file-medical-alt text-xl"></i>
-                        </div>
-                        <span class="font-bold text-xl tracking-tight text-gray-900">CareNexus <span class="text-blue-600 font-light">Audit</span></span>
+                    <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('dashboard')">
+                        <img src="CareNexuslogo.png" alt="CareNexus Logo" class="h-8 w-auto">
+                        <span class="text-gray-300 text-2xl font-light">|</span>
+                        <span class="font-bold text-xl tracking-tight text-blue-600">Audit</span>
                     </div>
                     <div class="hidden md:flex gap-6 text-sm font-semibold ml-4">
                         <button onclick="navigateTo('dashboard')" id="nav-dash" class="text-blue-600 border-b-2 border-blue-600 h-16 px-1 transition-colors">監査レポート</button>
@@ -80,12 +79,10 @@
         
         <div id="view-login" class="fixed inset-0 z-50 bg-gray-100 flex items-center justify-center">
             <div class="bg-white p-10 rounded-2xl shadow-xl w-full max-w-md text-center blur-in">
-                <div class="mb-8 flex justify-center">
-                    <div class="bg-blue-600 text-white p-3 rounded-xl shadow-lg">
-                        <i class="fa-solid fa-file-medical-alt text-3xl"></i>
-                    </div>
+                <div class="mb-10 flex justify-center">
+                    <img src="CareNexuslogo.png" alt="CareNexus Logo" class="h-20 w-auto">
                 </div>
-                <h1 class="text-2xl font-bold text-gray-900 mb-2">CareNexus Audit</h1>
+                <h2 class="text-xl font-bold text-gray-900 mb-2">Audit Cloud Login</h2>
                 <p class="text-gray-500 mb-8 text-sm">セキュアな環境で経営データを解析します。<br>管理者パスワードを入力してください。</p>
                 <form onsubmit="handleLogin(event)" class="space-y-4 text-left">
                     <div>
@@ -224,7 +221,7 @@
                                 <button class="bg-white border border-gray-300 text-gray-600 hover:bg-gray-50 px-3 py-1.5 rounded-md text-xs font-bold transition">主治医確認書 DL</button>
                             </td>
                         </tr>
-                        <tr class="hover:bg-blue-50 transition">
+                         <tr class="hover:bg-blue-50 transition">
                             <td class="px-6 py-4 font-medium text-gray-900">鈴木 大輔 様<br><span class="text-xs text-gray-400 bg-gray-100 px-1 rounded">ターミナル</span></td>
                             <td class="px-6 py-4 text-red-600 font-bold"><i class="fa-solid fa-file-invoice-dollar mr-1"></i>ターミナルケア加算</td>
                             <td class="px-6 py-4 max-w-xs text-xs">死亡日時の入力があるが、加算算定の実績データなし。</td>
