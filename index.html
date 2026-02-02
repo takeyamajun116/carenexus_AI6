@@ -10,37 +10,80 @@
     
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #F3F4F6; }
-        .drag-active { border-color: #3B82F6; background-color: #EFF6FF; }
         .blur-in { animation: blurIn 0.5s ease-out forwards; }
         @keyframes blurIn { from { filter: blur(5px); opacity: 0; } to { filter: blur(0); opacity: 1; } }
-        /* Watermark style for the preview */
-        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 5rem; color: rgba(200, 0, 0, 0.1); font-weight: bold; pointer-events: none; white-space: nowrap;}
+        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 4rem; color: rgba(200, 0, 0, 0.1); font-weight: bold; pointer-events: none; white-space: nowrap;}
+        
+        /* Custom Scrollbar for Todo List */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
 <body class="text-gray-800">
 
-    <nav class="bg-white shadow-sm border-b border-gray-200 fixed w-full z-10 top-0">
+    <nav id="navbar" class="hidden bg-white shadow-sm border-b border-gray-200 fixed w-full z-10 top-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
-                <div class="flex items-center gap-2">
-                    <div class="bg-blue-600 text-white p-1.5 rounded-lg">
-                        <i class="fa-solid fa-file-medical-alt text-xl"></i>
+                <div class="flex items-center gap-8">
+                    <div class="flex items-center gap-2 cursor-pointer" onclick="navigateTo('dashboard')">
+                        <div class="bg-blue-600 text-white p-1.5 rounded-lg">
+                            <i class="fa-solid fa-file-medical-alt text-xl"></i>
+                        </div>
+                        <span class="font-bold text-xl tracking-tight text-gray-900">CareNexus <span class="text-blue-600 font-light">Audit</span></span>
                     </div>
-                    <span class="font-bold text-xl tracking-tight text-gray-900">CareNexus <span class="text-blue-600 font-light">Audit</span></span>
+                    <div class="hidden md:flex gap-6 text-sm font-semibold">
+                        <button onclick="navigateTo('dashboard')" id="nav-dash" class="text-blue-600 border-b-2 border-blue-600 h-16 px-1">監査レポート</button>
+                        <button onclick="navigateTo('todo')" id="nav-todo" class="text-gray-500 hover:text-gray-800 h-16 px-1 relative">
+                            収益回収ToDo
+                            <span class="absolute top-4 -right-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">5</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="flex items-center gap-4">
-                    <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">Pro Plan</span>
+                    <span class="text-xs font-bold text-gray-400">ログイン中: 管理者</span>
                     <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold border border-blue-200">
-                        S
+                        A
                     </div>
+                    <button onclick="location.reload()" class="text-gray-400 hover:text-red-500 text-sm"><i class="fa-solid fa-right-from-bracket"></i></button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <main class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto min-h-screen">
+    <main class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto min-h-screen relative">
         
-        <div id="view-upload" class="blur-in">
+        <div id="view-login" class="fixed inset-0 z-50 bg-gray-100 flex items-center justify-center">
+            <div class="bg-white p-10 rounded-2xl shadow-xl w-full max-w-md text-center blur-in">
+                <div class="mb-8 flex justify-center">
+                    <div class="bg-blue-600 text-white p-3 rounded-xl shadow-lg">
+                        <i class="fa-solid fa-file-medical-alt text-3xl"></i>
+                    </div>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-900 mb-2">CareNexus Audit</h1>
+                <p class="text-gray-500 mb-8 text-sm">セキュアな環境で経営データを解析します。<br>管理者パスワードを入力してください。</p>
+                
+                <form onsubmit="handleLogin(event)" class="space-y-4 text-left">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">パスワード</label>
+                        <input type="password" id="password-input" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Enter PIN (0000)">
+                        <p id="login-error" class="text-red-500 text-xs mt-2 hidden"><i class="fa-solid fa-circle-exclamation"></i> パスワードが違います (0000)</p>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-md transition transform active:scale-95">
+                        セキュア・ログイン
+                    </button>
+                </form>
+                <div class="mt-8 flex justify-center gap-4 text-gray-300 text-2xl">
+                    <i class="fa-brands fa-aws"></i>
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <p class="mt-2 text-xs text-gray-400">AES-256bit暗号化通信で保護されています</p>
+            </div>
+        </div>
+
+        <div id="view-upload" class="hidden blur-in pt-10">
             <div class="text-center mb-10">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">レセコンデータを取り込む</h1>
                 <p class="text-gray-500">お使いのレセコンから出力したCSVをアップロードしてください。<br>iBow, カイポケ, ワイズマン等の形式を自動認識します。</p>
@@ -60,12 +103,11 @@
                         <span class="px-2 py-1 text-xs bg-gray-100 text-gray-500 rounded">実績明細.csv</span>
                     </div>
                 </div>
-                
                 <div class="mt-6 flex items-start gap-3 bg-blue-50 p-4 rounded-lg border border-blue-100">
                     <i class="fa-solid fa-shield-halved text-blue-600 mt-1"></i>
                     <div>
                         <p class="text-sm font-semibold text-blue-800">セキュリティ保護中</p>
-                        <p class="text-xs text-blue-600">アップロードされた個人情報は暗号化され、監査完了後に自動的に破棄されます。</p>
+                        <p class="text-xs text-blue-600">アップロードされた個人情報は暗号化され、ブラウザ内で解析されます。</p>
                     </div>
                 </div>
             </div>
@@ -101,42 +143,42 @@
                     <p class="text-sm text-gray-500 mb-1">発見された月間埋没収益</p>
                     <div class="text-4xl font-bold text-red-500 flex items-center gap-2">
                         <i class="fa-solid fa-arrow-trend-up text-2xl"></i>
-                        ¥245,600
+                        ¥285,600
                     </div>
-                    <p class="text-xs text-gray-400">年間換算: ¥2,947,200 の増収効果</p>
+                    <p class="text-xs text-gray-400">年間換算: ¥3,427,200 の増収効果</p>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500 relative overflow-hidden">
-                    <div class="absolute top-2 right-2 bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full font-bold">要対応</div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500 relative overflow-hidden group hover:shadow-md transition">
+                    <div class="absolute top-2 right-2 bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full font-bold">Priority High</div>
                     <h3 class="text-gray-500 text-sm font-semibold mb-1">特別管理加算 (II)</h3>
                     <p class="text-2xl font-bold text-gray-800">3名 未算定</p>
-                    <p class="text-xs text-gray-400 mt-2">対象: 佐藤様, 他2名</p>
-                    <p class="text-xs text-red-500 mt-1 font-semibold">+ ¥15,000 / 月</p>
+                    <p class="text-xs text-red-500 mt-2 font-semibold">+ ¥15,000 / 月・人</p>
+                    <button onclick="navigateTo('todo')" class="mt-4 w-full text-center text-xs bg-red-50 text-red-600 py-2 rounded font-bold group-hover:bg-red-500 group-hover:text-white transition">対応する</button>
                 </div>
-                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-orange-400">
-                    <div class="absolute top-2 right-2 bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-full font-bold">確認推奨</div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-orange-400 group hover:shadow-md transition">
+                    <div class="absolute top-2 right-2 bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-full font-bold">期限間近</div>
                     <h3 class="text-gray-500 text-sm font-semibold mb-1">緊急時訪問看護加算</h3>
-                    <p class="text-2xl font-bold text-gray-800">5名 契約不備</p>
-                    <p class="text-xs text-gray-400 mt-2">同意書の日付が期限切れの可能性</p>
-                    <p class="text-xs text-orange-500 mt-1 font-semibold">返戻リスクあり</p>
+                    <p class="text-2xl font-bold text-gray-800">5名 書類不備</p>
+                    <p class="text-xs text-orange-500 mt-2 font-semibold">返戻リスクあり</p>
+                    <button onclick="navigateTo('todo')" class="mt-4 w-full text-center text-xs bg-orange-50 text-orange-600 py-2 rounded font-bold group-hover:bg-orange-400 group-hover:text-white transition">対応する</button>
                 </div>
-                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500">
-                    <h3 class="text-gray-500 text-sm font-semibold mb-1">ベースアップ評価料</h3>
-                    <p class="text-2xl font-bold text-gray-800">区分変更可能</p>
-                    <p class="text-xs text-gray-400 mt-2">現在の職員配置なら区分(I)→(II)へ</p>
-                    <p class="text-xs text-blue-500 mt-1 font-semibold">+ ¥80,000 / 月</p>
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500 group hover:shadow-md transition">
+                    <h3 class="text-gray-500 text-sm font-semibold mb-1">ターミナルケア加算</h3>
+                    <p class="text-2xl font-bold text-gray-800">1名 算定漏れ</p>
+                    <p class="text-xs text-blue-500 mt-2 font-semibold">+ ¥25,000 / 回</p>
+                    <button onclick="navigateTo('todo')" class="mt-4 w-full text-center text-xs bg-blue-50 text-blue-600 py-2 rounded font-bold group-hover:bg-blue-500 group-hover:text-white transition">対応する</button>
                 </div>
             </div>
 
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
-                <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-                    <h3 class="font-bold text-gray-800">詳細監査リスト</h3>
-                    <button class="text-sm text-blue-600 hover:underline">CSVでダウンロード</button>
+                <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                    <h3 class="font-bold text-gray-800"><i class="fa-solid fa-list-check mr-2 text-gray-400"></i>詳細監査リスト (5件表示)</h3>
+                    <button class="text-xs bg-white border border-gray-300 text-gray-600 px-3 py-1 rounded hover:bg-gray-100"><i class="fa-solid fa-download mr-1"></i> CSV出力</button>
                 </div>
                 <table class="w-full text-sm text-left text-gray-600">
-                    <thead class="bg-gray-50 text-xs uppercase text-gray-500">
+                    <thead class="bg-white text-xs uppercase text-gray-500 border-b border-gray-100">
                         <tr>
                             <th class="px-6 py-3">利用者名</th>
                             <th class="px-6 py-3">検知内容</th>
@@ -145,29 +187,44 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 font-medium text-gray-900">佐藤 健一 様<br><span class="text-xs text-gray-400">要介護3 / 褥瘡あり</span></td>
-                            <td class="px-6 py-4 text-red-600 font-bold">特別管理加算 漏れ</td>
-                            <td class="px-6 py-4 max-w-xs">
-                                真皮を超える褥瘡処置の実績があるが、加算コードが含まれていません。
-                                <a href="#" class="text-blue-500 text-xs underline block mt-1">告示52号 算定要件を確認</a>
-                            </td>
+                        <tr class="hover:bg-blue-50 transition">
+                            <td class="px-6 py-4 font-medium text-gray-900">佐藤 健一 様<br><span class="text-xs text-gray-400 bg-gray-100 px-1 rounded">要介護3 / 褥瘡</span></td>
+                            <td class="px-6 py-4 text-red-600 font-bold"><i class="fa-solid fa-triangle-exclamation mr-1"></i>特別管理加算 漏れ</td>
+                            <td class="px-6 py-4 max-w-xs text-xs">真皮を超える褥瘡処置の実績があるが、加算コードなし。</td>
                             <td class="px-6 py-4">
-                                <button onclick="openLegalModal('佐藤 健一', '特別管理加算に係る届出書')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md text-xs font-bold shadow transition">
-                                    届出ドラフト作成
-                                </button>
+                                <button onclick="openLegalModal('佐藤 健一', '特別管理加算に係る届出書')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md text-xs font-bold shadow transition">届出ドラフト作成</button>
                             </td>
                         </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 font-medium text-gray-900">田中 良子 様<br><span class="text-xs text-gray-400">要介護5 / 難病</span></td>
-                            <td class="px-6 py-4 text-orange-600 font-bold">保険種別の誤り</td>
-                            <td class="px-6 py-4 max-w-xs">
-                                パーキンソン病（Yahr IV）のため、介護保険ではなく医療保険適用の可能性があります。
-                            </td>
+                        <tr class="hover:bg-blue-50 transition">
+                            <td class="px-6 py-4 font-medium text-gray-900">田中 良子 様<br><span class="text-xs text-gray-400 bg-gray-100 px-1 rounded">要介護5 / 難病</span></td>
+                            <td class="px-6 py-4 text-orange-600 font-bold"><i class="fa-solid fa-shuffle mr-1"></i>保険種別の誤り</td>
+                            <td class="px-6 py-4 max-w-xs text-xs">パーキンソン病（Yahr IV）のため、医療保険適用可。</td>
                             <td class="px-6 py-4">
-                                <button class="bg-white border border-gray-300 text-gray-600 hover:bg-gray-50 px-3 py-1.5 rounded-md text-xs font-bold transition">
-                                    主治医確認書 DL
-                                </button>
+                                <button class="bg-white border border-gray-300 text-gray-600 hover:bg-gray-50 px-3 py-1.5 rounded-md text-xs font-bold transition">主治医確認書 DL</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-blue-50 transition">
+                            <td class="px-6 py-4 font-medium text-gray-900">鈴木 大輔 様<br><span class="text-xs text-gray-400 bg-gray-100 px-1 rounded">ターミナル</span></td>
+                            <td class="px-6 py-4 text-red-600 font-bold"><i class="fa-solid fa-file-invoice-dollar mr-1"></i>ターミナルケア加算</td>
+                            <td class="px-6 py-4 max-w-xs text-xs">死亡日時の入力があるが、加算算定の実績データなし。</td>
+                            <td class="px-6 py-4">
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md text-xs font-bold shadow transition">実績修正へ</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-blue-50 transition">
+                            <td class="px-6 py-4 font-medium text-gray-900">山本 さくら 様<br><span class="text-xs text-gray-400 bg-gray-100 px-1 rounded">退院直後</span></td>
+                            <td class="px-6 py-4 text-gray-800 font-bold"><i class="fa-solid fa-hospital-user mr-1"></i>退院時共同指導</td>
+                            <td class="px-6 py-4 max-w-xs text-xs">カンファレンス参加記録あり。加算算定が可能。</td>
+                            <td class="px-6 py-4">
+                                <button class="bg-white border border-gray-300 text-gray-600 hover:bg-gray-50 px-3 py-1.5 rounded-md text-xs font-bold transition">指導記録作成</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-blue-50 transition">
+                            <td class="px-6 py-4 font-medium text-gray-900">高橋 誠 様<br><span class="text-xs text-gray-400 bg-gray-100 px-1 rounded">要介護2</span></td>
+                            <td class="px-6 py-4 text-orange-600 font-bold"><i class="fa-solid fa-clock mr-1"></i>初回加算 期限切れ</td>
+                            <td class="px-6 py-4 max-w-xs text-xs">初回訪問から2ヶ月経過。算定は不可だが記録修正が必要。</td>
+                            <td class="px-6 py-4">
+                                <button class="text-gray-400 text-xs underline">無視する</button>
                             </td>
                         </tr>
                     </tbody>
@@ -175,10 +232,74 @@
             </div>
         </div>
 
+        <div id="view-todo" class="hidden blur-in">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900">収益回収 ToDoリスト</h2>
+                    <p class="text-gray-500 text-sm">監査で発見された事項を完了させ、収益を確定させましょう。</p>
+                </div>
+                <div class="bg-green-50 px-4 py-2 rounded-lg border border-green-200">
+                    <p class="text-xs text-green-600 font-bold">回収完了見込み</p>
+                    <p class="text-xl font-bold text-green-700">¥0 / ¥285,600</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden flex flex-col md:flex-row h-[500px]">
+                <div class="w-full md:w-1/2 border-r border-gray-100 overflow-y-auto custom-scroll p-4 space-y-3">
+                    <p class="text-xs font-bold text-gray-400 uppercase mb-2">未完了タスク (5)</p>
+                    
+                    <div class="bg-white border border-l-4 border-gray-200 border-l-red-500 p-4 rounded-lg shadow-sm hover:shadow-md cursor-pointer transition relative group">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-gray-800 text-sm">特別管理加算の届出作成</h4>
+                                <p class="text-xs text-gray-500 mt-1"><i class="fa-solid fa-user mr-1"></i>佐藤 健一 様</p>
+                            </div>
+                            <span class="bg-red-100 text-red-600 text-[10px] font-bold px-2 py-1 rounded-full">¥15,000</span>
+                        </div>
+                        <div class="mt-3 flex gap-2">
+                            <button onclick="openLegalModal('佐藤 健一', '特別管理加算に係る届出書')" class="text-xs bg-blue-50 text-blue-600 px-3 py-1 rounded font-bold hover:bg-blue-100">ドラフト作成</button>
+                            <button class="text-xs text-gray-400 hover:text-gray-600"><i class="fa-solid fa-check"></i> 完了にする</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-l-4 border-gray-200 border-l-red-500 p-4 rounded-lg shadow-sm hover:shadow-md cursor-pointer transition">
+                         <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-gray-800 text-sm">ターミナルケア加算の実績修正</h4>
+                                <p class="text-xs text-gray-500 mt-1"><i class="fa-solid fa-user mr-1"></i>鈴木 大輔 様</p>
+                            </div>
+                            <span class="bg-red-100 text-red-600 text-[10px] font-bold px-2 py-1 rounded-full">¥25,000</span>
+                        </div>
+                        <div class="mt-3 flex gap-2">
+                            <button class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded font-bold hover:bg-gray-200">レセコンを開く</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border border-l-4 border-gray-200 border-l-orange-400 p-4 rounded-lg shadow-sm hover:shadow-md cursor-pointer transition">
+                         <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-gray-800 text-sm">緊急時訪問看護加算の同意書確認</h4>
+                                <p class="text-xs text-gray-500 mt-1"><i class="fa-solid fa-user mr-1"></i>伊藤 茂 様 他4名</p>
+                            </div>
+                            <span class="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-1 rounded-full">Risk回避</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hidden md:block w-1/2 bg-gray-50 p-6 flex flex-col justify-center items-center text-center">
+                    <div class="bg-white p-4 rounded-full shadow-sm mb-4">
+                        <i class="fa-solid fa-lightbulb text-yellow-400 text-3xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 mb-2">タスクを選択してください</h3>
+                    <p class="text-sm text-gray-500 max-w-xs">左側のリストからタスクを選ぶと、具体的なアクション手順や、必要な書類ドラフトが表示されます。</p>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <div id="legal-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 hidden flex items-center justify-center backdrop-blur-sm">
-        <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden animate-bounce-in">
+        <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden">
             <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                 <h3 class="text-lg font-bold text-gray-800">
                     <i class="fa-solid fa-file-signature text-blue-600 mr-2"></i>
@@ -186,32 +307,27 @@
                 </h3>
                 <button onclick="closeLegalModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-times"></i></button>
             </div>
-            
             <div class="p-6">
                 <div class="bg-gray-100 border border-gray-300 p-4 rounded mb-6 relative h-32 flex items-center justify-center">
                     <div class="text-center">
                         <i class="fa-regular fa-file-pdf text-4xl text-gray-400 mb-2"></i>
-                        <p class="text-sm font-bold text-gray-600" id="modal-doc-title">特別管理加算に係る届出書</p>
-                        <p class="text-xs text-gray-400">対象: 佐藤 健一 様</p>
+                        <p class="text-sm font-bold text-gray-600" id="modal-doc-title">書類名</p>
+                        <p class="text-xs text-gray-400">対象: <span id="modal-user-name"></span></p>
                     </div>
                     <div class="watermark">DRAFT</div>
                 </div>
-
                 <div class="space-y-4">
                     <p class="text-sm text-gray-600 font-bold mb-2">以下を確認し、チェックを入れてください（必須）</p>
-                    
                     <label class="flex items-start gap-3 p-3 rounded-lg border border-gray-200 hover:bg-blue-50 cursor-pointer transition">
                         <input type="checkbox" id="check1" class="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" onchange="validateChecks()">
                         <span class="text-sm text-gray-700">システムが提示した算定要件（褥瘡の状態等）が、実際の利用者の状態と一致していることを確認しました。</span>
                     </label>
-
                     <label class="flex items-start gap-3 p-3 rounded-lg border border-gray-200 hover:bg-blue-50 cursor-pointer transition">
                         <input type="checkbox" id="check2" class="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" onchange="validateChecks()">
                         <span class="text-sm text-gray-700">本機能は「作成支援」であり、最終的な申請と提出は事業所の責任において行うことを理解しました。</span>
                     </label>
                 </div>
             </div>
-
             <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end gap-3">
                 <button onclick="closeLegalModal()" class="px-4 py-2 text-gray-600 text-sm font-bold hover:bg-gray-200 rounded-lg transition">キャンセル</button>
                 <button id="btn-download" disabled onclick="downloadSuccess()" class="px-6 py-2 bg-gray-400 text-white text-sm font-bold rounded-lg shadow-sm cursor-not-allowed transition flex items-center gap-2">
@@ -231,24 +347,69 @@
     </div>
 
     <script>
-        // Simulation: Upload Process
+        // --- Navigation & State Management ---
+        function navigateTo(viewId) {
+            // Hide all main views
+            document.getElementById('view-upload').classList.add('hidden');
+            document.getElementById('view-processing').classList.add('hidden');
+            document.getElementById('view-dashboard').classList.add('hidden');
+            document.getElementById('view-todo').classList.add('hidden');
+            document.getElementById('view-login').classList.add('hidden');
+
+            // Handle Nav Styles
+            const navDash = document.getElementById('nav-dash');
+            const navTodo = document.getElementById('nav-todo');
+            
+            navDash.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
+            navDash.classList.add('text-gray-500');
+            navTodo.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
+            navTodo.classList.add('text-gray-500');
+
+            if (viewId === 'dashboard') {
+                document.getElementById('view-dashboard').classList.remove('hidden');
+                navDash.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+                navDash.classList.remove('text-gray-500');
+            } else if (viewId === 'todo') {
+                document.getElementById('view-todo').classList.remove('hidden');
+                navTodo.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+                navTodo.classList.remove('text-gray-500');
+            } else if (viewId === 'upload') {
+                document.getElementById('view-upload').classList.remove('hidden');
+            }
+        }
+
+        // --- Login Logic ---
+        function handleLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('password-input').value;
+            const errorMsg = document.getElementById('login-error');
+            
+            if (pass === '0000') {
+                // Success
+                document.getElementById('view-login').classList.add('hidden');
+                document.getElementById('navbar').classList.remove('hidden');
+                navigateTo('upload');
+            } else {
+                // Error
+                errorMsg.classList.remove('hidden');
+                document.getElementById('password-input').classList.add('border-red-500', 'ring-2', 'ring-red-200');
+            }
+        }
+
+        // --- Upload Simulation ---
         function simulateUpload() {
             const dropZone = document.getElementById('drop-zone');
-            
-            // Visual feedback
             dropZone.classList.add('bg-blue-50', 'border-blue-500');
             dropZone.innerHTML = '<div class="text-blue-600"><i class="fa-solid fa-circle-notch fa-spin text-3xl mb-2"></i><p class="font-bold">アップロード中...</p></div>';
 
             setTimeout(() => {
-                // Switch to Processing View
                 document.getElementById('view-upload').classList.add('hidden');
                 document.getElementById('view-processing').classList.remove('hidden');
                 document.getElementById('view-processing').classList.add('blur-in');
 
-                // Simulate progress steps
                 setTimeout(() => {
                     document.getElementById('step-2').classList.remove('opacity-50');
-                    document.getElementById('step-2').innerHTML = '<i class="fa-solid fa-check-circle text-green-500 mr-2"></i> 算定要件ロジック照合 (厚労省告示 第52号)';
+                    document.getElementById('step-2').innerHTML = '<i class="fa-solid fa-check-circle text-green-500 mr-2"></i> 算定要件ロジック照合';
                     document.getElementById('process-status').innerText = '加算漏れを検知中...';
                 }, 1000);
 
@@ -258,20 +419,18 @@
                     document.getElementById('process-status').innerText = 'レポート作成中...';
                 }, 2000);
 
-                // Switch to Dashboard
                 setTimeout(() => {
                     document.getElementById('view-processing').classList.add('hidden');
-                    document.getElementById('view-dashboard').classList.remove('hidden');
+                    navigateTo('dashboard');
                 }, 3000);
-
             }, 800);
         }
 
-        // Modal Logic
+        // --- Modal Logic ---
         function openLegalModal(name, docTitle) {
+            document.getElementById('modal-user-name').innerText = name;
             document.getElementById('modal-doc-title').innerText = docTitle;
             document.getElementById('legal-modal').classList.remove('hidden');
-            // Reset checks
             document.getElementById('check1').checked = false;
             document.getElementById('check2').checked = false;
             validateChecks();
@@ -281,7 +440,6 @@
             document.getElementById('legal-modal').classList.add('hidden');
         }
 
-        // Legal Check Validation
         function validateChecks() {
             const c1 = document.getElementById('check1').checked;
             const c2 = document.getElementById('check2').checked;
@@ -298,12 +456,10 @@
             }
         }
 
-        // Download Simulation
         function downloadSuccess() {
             closeLegalModal();
             const toast = document.getElementById('toast');
             toast.classList.remove('translate-y-20', 'opacity-0');
-            
             setTimeout(() => {
                 toast.classList.add('translate-y-20', 'opacity-0');
             }, 3000);
